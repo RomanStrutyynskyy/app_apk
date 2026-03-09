@@ -13,8 +13,8 @@ jobs:
           buildozer_version: stable
         env:
           PLATFORM: android
-      - name: Upload APK
-        uses: actions/upload-artifact@v3
-        with:
-          name: package
-          path: bin/*.apk
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+     with:
+        name: my-artifact
+        path: ./build
