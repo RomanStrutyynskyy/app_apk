@@ -16,6 +16,7 @@ package.domain = org.test
 
 # (str) Source code where the main.py live
 source.dir = .
+android.accept_sdk_license = True
 
 # (list) Source files to include (leave empty to include all the files)
 source.include_exts = py,png,jpg,kv,atlas
@@ -495,3 +496,4 @@ warn_on_root = 1
 #        buildozer --profile demo android debug
 #
 #   Environment variable overrides have priority over profile overrides.
+
