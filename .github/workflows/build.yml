@@ -17,20 +17,19 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          # Виправлено: libncursesw5-dev
-          sudo apt-get install -y git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev libc6-dev libgmp-dev
+          # Додано m4, libtool, gettext та інші для виправлення помилки autoreconf
+          sudo apt-get install -y git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev \
+          libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev libc6-dev libgmp-dev \
+          m4 gettext libtool-bin
+          
           python -m pip install --upgrade pip
           pip install --user --upgrade buildozer cython virtualenv
 
       - name: Build with Buildozer
         run: |
-          # Додаємо шлях до локальних бінарників у PATH
           export PATH=$PATH:$HOME/.local/bin
-          # Створюємо необхідну конфігурацію для Android SDK
-          mkdir -p ~/.android && touch ~/.android/repositories.cfg
-          # Очищення перед початком
+          # Видаляємо старий кеш, щоб він перезібрав libffi з новими інструментами
           rm -rf .buildozer
-          # Запуск збірки з детальним виводом
           buildozer -v android debug
         env:
           ANDROIDSDK_ACCEPT_LICENSES: 1
