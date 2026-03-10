@@ -9,21 +9,31 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11' # Фіксуємо стабільну версію Python
+
+      - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3-pip git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev libc6-dev
-          pip3 install --user --upgrade buildozer cython virtualenv
+          sudo apt-get install -y git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-en cmake libffi-dev libssl-dev libc6-dev libgmp-dev
+          # Встановлюємо buildozer та cython окремо, ігноруючи системні обмеження
+          python -m pip install --upgrade pip
+          pip install --user --upgrade buildozer cython virtualenv
 
       - name: Build with Buildozer
         run: |
-          # Видаляємо стару папку кешу, щоб уникнути конфліктів прав доступу
+          # Додаємо шлях до buildozer в PATH
+          export PATH=$PATH:$HOME/.local/bin
+          # Видаляємо сміття від попередніх спроб
           rm -rf .buildozer
-          # Запуск збірки з примусовим прийняттям ліцензій
+          # Запуск з детальним виводом
           buildozer -v android debug
         env:
-          # Ці змінні змушують Buildozer не зупинятися на запиті ліцензій
           ANDROIDSDK_ACCEPT_LICENSES: 1
+          # Це змушує Buildozer використовувати правильний Python
+          BUILDOZER_PYTHON_VERSION: 3.11
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
